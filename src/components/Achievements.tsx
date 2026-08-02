@@ -1,8 +1,8 @@
-import { Award, ShieldCheck } from "lucide-react";
+import { Award, ShieldCheck, Trophy } from "lucide-react";
 import Reveal, { SectionHeading } from "./Reveal";
 import { achievements } from "@/data";
 
-const icons = [ShieldCheck, Award];
+const icons = [Trophy, ShieldCheck, Award];
 
 export default function Achievements() {
   return (

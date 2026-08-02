@@ -16,7 +16,7 @@ export const profile = {
   location: "Bengaluru, India",
   email: "devanshkhetan9@gmail.com",
   phone: "+91 8766099999",
-  resumeUrl: "/Devansh_Khetan_Resume.pdf",
+  resumeUrl: import.meta.env.BASE_URL + "Devansh_Khetan_Resume.pdf",
   socials: {
     github: "https://github.com/DeVaNsHk72",
     github2: "https://github.com/Devanshk9",
@@ -201,6 +201,13 @@ export type Achievement = {
 };
 
 export const achievements: Achievement[] = [
+  {
+    title: "Flipkart GRID 2026 — National Semi-Finalist",
+    meta: "Flipkart's flagship national engineering challenge",
+    points: [
+      "Advanced to the national semi-final round of Flipkart GRID 2026, competing against teams from across India.",
+    ],
+  },
   {
     title: "Security Tester — e-Governance Platform, BMSCE",
     meta: "Responsible disclosure",

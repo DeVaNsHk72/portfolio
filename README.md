@@ -3,7 +3,7 @@
 A retro-terminal / CRT themed developer portfolio. Boot-sequence hero, glitch
 type, scanline overlays, and a fully responsive layout.
 
-**Live:** _(add your Vercel URL here)_
+**Live:** https://devanshk72.github.io/portfolio/
 
 ## Stack
 
@@ -27,11 +27,13 @@ npm run build    # type-check + bundle to dist/
 npm run preview  # preview the production build
 ```
 
-## Deploy (Vercel)
+## Deploy (GitHub Pages)
 
-Vercel auto-detects Vite. Framework preset: **Vite** · Build: `npm run build`
-· Output: `dist`. Push to GitHub and import the repo at
-[vercel.com/new](https://vercel.com/new), or run `npx vercel --prod`.
+Deployed via GitHub Actions ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)):
+every push to `main` builds and publishes `dist/` to Pages. The site is a
+project page, so `base` is set to `/portfolio/` in `vite.config.ts` — rename
+that if you rename the repo. Pages source must be set to **GitHub Actions**
+(Settings → Pages).
 
 ## Editing content
 

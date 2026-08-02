@@ -5,6 +5,8 @@ import path from "node:path";
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Served from https://devanshk72.github.io/portfolio/ on GitHub Pages.
+  base: "/portfolio/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
