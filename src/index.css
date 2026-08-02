@@ -1,0 +1,305 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  RETRO-TERMINAL THEME TOKENS                                        */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-bg: #080b09;
+  --color-bg-soft: #0b100d;
+  --color-panel: #0d1411;
+  --color-panel-2: #101a15;
+  --color-fg: #cdeed7;
+  --color-fg-soft: #9fc4ac;
+  --color-green: #4ce088;
+  --color-green-bright: #7dffab;
+  --color-amber: #ffb454;
+  --color-cyan: #58e6d6;
+  --color-magenta: #ff6ec7;
+  --color-dim: #5e7a6a;
+  --color-line: rgba(76, 224, 136, 0.14);
+  --color-line-strong: rgba(76, 224, 136, 0.35);
+
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-crt: "VT323", "JetBrains Mono", monospace;
+}
+
+/* ------------------------------------------------------------------ */
+/*  BASE                                                               */
+/* ------------------------------------------------------------------ */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: var(--color-green) var(--color-bg);
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-mono);
+  font-feature-settings: "liga" 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-green);
+  color: #05100a;
+}
+
+/* Terminal scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(76, 224, 136, 0.35);
+  border-radius: 0;
+  border: 2px solid var(--color-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-green);
+}
+
+/* ------------------------------------------------------------------ */
+/*  CRT SCREEN EFFECTS (global overlays)                              */
+/* ------------------------------------------------------------------ */
+
+/* Faint scanlines across the whole page */
+.crt-scanlines::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.28) 3px,
+    rgba(0, 0, 0, 0.28) 4px
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+/* Vignette + subtle phosphor glow + slow flicker */
+.crt-scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 61;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 55%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  animation: crt-flicker 6s infinite steps(1);
+}
+
+@keyframes crt-flicker {
+  0%, 97%, 100% { opacity: 1; }
+  98% { opacity: 0.86; }
+  99% { opacity: 0.94; }
+}
+
+/* Rolling scan bar */
+.scan-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 140px;
+  z-index: 59;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(76, 224, 136, 0) 0%,
+    rgba(76, 224, 136, 0.05) 50%,
+    rgba(76, 224, 136, 0) 100%
+  );
+  animation: roll 7s linear infinite;
+}
+@keyframes roll {
+  0% { transform: translateY(-160px); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Grid background used in hero */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 42px 42px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 40%, transparent 100%);
+}
+
+/* ------------------------------------------------------------------ */
+/*  GLITCH TEXT (adapted from 21st.dev CyberpunkTerminalHero)         */
+/* ------------------------------------------------------------------ */
+.glitch {
+  position: relative;
+  display: inline-block;
+  color: var(--color-green-bright);
+  text-shadow: 0 0 12px rgba(125, 255, 171, 0.35);
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.glitch::before {
+  color: var(--color-magenta);
+  z-index: -1;
+  animation: glitch-a 2.6s infinite linear alternate-reverse;
+}
+.glitch::after {
+  color: var(--color-cyan);
+  z-index: -2;
+  animation: glitch-b 3.4s infinite linear alternate-reverse;
+}
+@keyframes glitch-a {
+  0%, 92%, 100% { transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+  93% { transform: translate(-2px, -1px); clip-path: inset(20% 0 40% 0); }
+  95% { transform: translate(2px, 1px); clip-path: inset(60% 0 10% 0); }
+  97% { transform: translate(-1px, 1px); clip-path: inset(10% 0 70% 0); }
+}
+@keyframes glitch-b {
+  0%, 90%, 100% { transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+  91% { transform: translate(2px, 1px); clip-path: inset(50% 0 20% 0); }
+  94% { transform: translate(-2px, -1px); clip-path: inset(15% 0 55% 0); }
+  96% { transform: translate(1px, -1px); clip-path: inset(70% 0 5% 0); }
+}
+
+/* Blinking terminal cursor */
+.cursor::after {
+  content: "▮";
+  margin-left: 2px;
+  color: var(--color-green);
+  animation: blink 1.05s steps(1) infinite;
+}
+.blink {
+  animation: blink 1.05s steps(1) infinite;
+}
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* ------------------------------------------------------------------ */
+/*  TERMINAL WINDOW CHROME                                            */
+/* ------------------------------------------------------------------ */
+.term {
+  background: var(--color-panel);
+  border: 1px solid var(--color-line-strong);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 24px 60px -20px rgba(0, 0, 0, 0.8),
+    inset 0 0 60px rgba(76, 224, 136, 0.03);
+}
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--color-line);
+  background: linear-gradient(to bottom, rgba(76, 224, 136, 0.05), transparent);
+}
+.term-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+/* Buttons */
+.btn-term {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: var(--color-green-bright);
+  border: 1px solid var(--color-line-strong);
+  background: rgba(76, 224, 136, 0.04);
+  transition: all 0.18s ease;
+  cursor: pointer;
+}
+.btn-term:hover {
+  background: rgba(76, 224, 136, 0.14);
+  border-color: var(--color-green);
+  box-shadow: 0 0 22px -4px rgba(76, 224, 136, 0.5);
+  transform: translateY(-1px);
+}
+.btn-term.amber {
+  color: var(--color-amber);
+  border-color: rgba(255, 180, 84, 0.4);
+  background: rgba(255, 180, 84, 0.05);
+}
+.btn-term.amber:hover {
+  background: rgba(255, 180, 84, 0.14);
+  border-color: var(--color-amber);
+  box-shadow: 0 0 22px -4px rgba(255, 180, 84, 0.5);
+}
+
+/* Tag chip */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--color-fg-soft);
+  border: 1px solid var(--color-line);
+  background: rgba(76, 224, 136, 0.04);
+}
+
+/* Text glow helpers */
+.glow {
+  text-shadow: 0 0 10px rgba(76, 224, 136, 0.45);
+}
+.glow-amber {
+  text-shadow: 0 0 10px rgba(255, 180, 84, 0.4);
+}
+
+/* Card hover lift */
+.lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-line-strong);
+  box-shadow: 0 22px 50px -24px rgba(76, 224, 136, 0.35);
+}
+
+/* Anchor offset for fixed nav */
+section[id] {
+  scroll-margin-top: 84px;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
