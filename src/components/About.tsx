@@ -44,7 +44,7 @@ export default function About() {
                   <div className="font-crt text-3xl text-green-bright glow">
                     {s.value}
                   </div>
-                  <div className="mt-1 text-[0.7rem] leading-tight text-dim">
+                  <div className="mt-1 text-xs leading-tight text-dim">
                     {s.label}
                   </div>
                 </div>

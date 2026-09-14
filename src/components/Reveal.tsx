@@ -9,14 +9,14 @@ type Props = {
 };
 
 /** Fade + rise into view once, when scrolled into the viewport. */
-export default function Reveal({ children, delay = 0, y = 22, className = "" }: Props) {
+export default function Reveal({ children, delay = 0, y = 12, className = "" }: Props) {
   return (
     <motion.div
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.24, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>

@@ -12,7 +12,7 @@ export const profile = {
     "Security & Systems Tinkerer",
   ],
   tagline:
-    "Final-year CS (Cyber Security) undergrad who ships production features end to end — from LLM/RAG systems to full-stack apps used by thousands.",
+    "Final-year CS (Cyber Security) undergrad who ships production features end to end — from LLM/RAG systems to full-stack apps used by 6,000+ people.",
   location: "Bengaluru, India",
   email: "devanshkhetan9@gmail.com",
   phone: "+91 8766099999",

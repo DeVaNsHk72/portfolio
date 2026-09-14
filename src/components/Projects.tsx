@@ -18,7 +18,9 @@ export default function Projects() {
                 {...(p.href
                   ? { href: p.href, target: "_blank", rel: "noreferrer" }
                   : {})}
-                className="term lift group flex h-full flex-col p-5 sm:p-6"
+                className={`term group flex h-full flex-col p-5 sm:p-6 ${
+                  p.href ? "lift cursor-pointer" : ""
+                }`}
               >
                 {/* prompt line */}
                 <div className="flex items-center gap-2 text-xs text-dim">

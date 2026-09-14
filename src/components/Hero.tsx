@@ -5,12 +5,17 @@ import { Github } from "./BrandIcons";
 import { profile, bootLines } from "@/data";
 
 /** Rotating role text with a typewriter effect. */
+const reducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 function useTypewriter(words: string[], speed = 70, pause = 1400) {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(reducedMotion() ? words[0] : "");
   const [i, setI] = useState(0);
   const [del, setDel] = useState(false);
 
   useEffect(() => {
+    if (reducedMotion()) return;
     const word = words[i % words.length];
     if (!del && text === word) {
       const t = setTimeout(() => setDel(true), pause);
@@ -37,17 +42,15 @@ function useTypewriter(words: string[], speed = 70, pause = 1400) {
 
 export default function Hero() {
   const role = useTypewriter(profile.roles);
-  const [bootDone, setBootDone] = useState(false);
-  const [lineCount, setLineCount] = useState(0);
+  const [lineCount, setLineCount] = useState(() =>
+    reducedMotion() ? bootLines.length : 0
+  );
   const ref = useRef<HTMLDivElement>(null);
 
-  // Reveal boot lines one by one.
+  // Boot lines type themselves in alongside the identity -- they never gate it.
   useEffect(() => {
-    if (lineCount >= bootLines.length) {
-      const t = setTimeout(() => setBootDone(true), 450);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => setLineCount((c) => c + 1), 260);
+    if (lineCount >= bootLines.length) return;
+    const t = setTimeout(() => setLineCount((c) => c + 1), 110);
     return () => clearTimeout(t);
   }, [lineCount]);
 
@@ -81,7 +84,7 @@ export default function Hero() {
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 py-28 sm:px-8">
         {/* boot terminal */}
-        <div className="mb-10 max-w-xl font-mono text-sm leading-relaxed">
+        <div className="mb-10 min-h-[7.5rem] max-w-xl font-mono text-sm leading-relaxed">
           {bootLines.slice(0, lineCount).map((line, idx) => (
             <div
               key={idx}
@@ -95,16 +98,16 @@ export default function Hero() {
               {line}
             </div>
           ))}
-          {!bootDone && lineCount >= bootLines.length && (
+          {lineCount < bootLines.length && (
             <span className="text-green blink">▮</span>
           )}
         </div>
 
         {/* main identity */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={bootDone ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="mb-3 text-sm tracking-widest text-green uppercase">
             $ ./devansh --introduce
@@ -162,7 +165,7 @@ export default function Hero() {
       {/* scroll cue */}
       <a
         href="#about"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-dim hover:text-green"
+        className="absolute bottom-6 left-1/2 grid h-11 w-11 -translate-x-1/2 place-items-center text-dim hover:text-green"
         aria-label="Scroll to about"
       >
         <ArrowDown className="animate-bounce" size={22} />

@@ -17,9 +17,9 @@ export default function TerminalWindow({
   return (
     <div className={`term ${className}`}>
       <div className="term-bar">
-        <span className="term-dot" style={{ background: "#ff5f56" }} />
-        <span className="term-dot" style={{ background: "#ffbd2e" }} />
-        <span className="term-dot" style={{ background: "#27c93f" }} />
+        <span className="term-dot bg-dim" />
+        <span className="term-dot bg-amber" />
+        <span className="term-dot bg-green" />
         <span className="ml-2 text-xs text-dim truncate select-none">
           {title}
         </span>

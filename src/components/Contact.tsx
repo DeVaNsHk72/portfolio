@@ -33,7 +33,7 @@ export default function Contact() {
                 href={l.href}
                 target={l.href.startsWith("mailto") ? undefined : "_blank"}
                 rel="noreferrer"
-                className="group flex items-center gap-3 border border-line bg-green/[0.03] px-4 py-3 transition-colors hover:border-line-strong hover:bg-green/[0.07]"
+                className="group flex items-center gap-3 bg-green/[0.05] px-4 py-3 transition-colors hover:bg-green/[0.11]"
               >
                 <l.icon size={17} className="shrink-0 text-green" />
                 <span className="text-xs text-dim">{l.label}</span>

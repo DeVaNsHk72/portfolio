@@ -7,6 +7,7 @@ const links = [
   { id: "experience", label: "experience" },
   { id: "projects", label: "projects" },
   { id: "skills", label: "skills" },
+  { id: "achievements", label: "wins" },
   { id: "contact", label: "contact" },
 ];
 
@@ -68,7 +69,9 @@ export default function Nav() {
                     : "text-fg-soft hover:text-green"
                 }`}
               >
-                <span className="text-dim">{active === l.id ? "> " : ""}</span>
+                <span className="inline-block w-3 text-dim">
+                  {active === l.id ? ">" : ""}
+                </span>
                 {l.label}
               </a>
             </li>
@@ -85,7 +88,7 @@ export default function Nav() {
 
         {/* mobile toggle */}
         <button
-          className="text-green md:hidden"
+          className="-mr-2 grid h-11 w-11 place-items-center text-green md:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
           aria-expanded={open}
