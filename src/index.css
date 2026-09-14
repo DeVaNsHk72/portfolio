@@ -1,302 +1,168 @@
 @import "tailwindcss";
 
-/* ------------------------------------------------------------------ */
-/*  RETRO-TERMINAL THEME TOKENS                                        */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ *
+ *  Tokens
+ *
+ *  Every value below comes from one of two places: the warm neutral
+ *  ramp, or the sanctioned finish table (Blue deep #4A667A in light,
+ *  Sierra Blue #9BB5CE in dark). No invented hexes.
+ *
+ *  One accent. Two text tones — a third tested at 3.30:1 and was cut
+ *  rather than shipped failing.
+ * ------------------------------------------------------------------ */
 @theme {
-  --color-bg: #080b09;
-  --color-bg-soft: #0b100d;
-  --color-panel: #0d1411;
-  --color-panel-2: #101a15;
-  --color-fg: #cdeed7;
-  --color-fg-soft: #9fc4ac;
-  --color-green: #4ce088;
-  --color-green-bright: #7dffab;
-  --color-amber: #ffb454;
-  --color-dim: #748f80;
-  --color-line: rgba(76, 224, 136, 0.14);
-  --color-line-strong: rgba(76, 224, 136, 0.35);
+  --color-bg: #fafaf8;
+  --color-surface: #f2f1ed;
+  --color-hairline: #e0ded7;
+  --color-ink: #1c1a17;        /* 16.61:1 on bg */
+  --color-ink-2: #6f6b62;      /*  5.08:1 on bg */
+  --color-accent: #4a667a;     /*  5.79:1 on bg; white on it, 6.05:1 */
+  --color-accent-ink: #ffffff;
 
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --font-crt: "VT323", "JetBrains Mono", monospace;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* four sizes, ratio ~1.2, display sitting above the ramp */
+  --text-meta: 0.875rem;       /* 14px — mono labels, dates, tags */
+  --text-body: 1.0625rem;      /* 17px */
+  --text-head: 1.3125rem;      /* 21px */
+  --text-display: 2.75rem;     /* 44px */
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
 }
 
-/* ------------------------------------------------------------------ */
-/*  BASE                                                               */
-/* ------------------------------------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-bg: #12110f;
+    --color-surface: #1b1a17;
+    --color-hairline: #2c2a26;
+    --color-ink: #f5f3ef;       /* 17.03:1 on bg */
+    --color-ink-2: #a8a49b;     /*  7.59:1 on bg */
+    --color-accent: #9bb5ce;    /*  8.89:1 on bg */
+    --color-accent-ink: #12110f;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Base
+ * ------------------------------------------------------------------ */
 * {
   box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
-  scrollbar-color: var(--color-green) var(--color-bg);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
   background: var(--color-bg);
-  color: var(--color-fg);
-  font-family: var(--font-mono);
-  font-feature-settings: "liga" 0;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  font-variant-numeric: tabular-nums;
 }
 
 ::selection {
-  background: var(--color-green);
-  color: #05100a;
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
 }
 
-/* Terminal scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(76, 224, 136, 0.35);
-  border-radius: 0;
-  border: 2px solid var(--color-bg);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-green);
+a {
+  color: inherit;
 }
 
-/* ------------------------------------------------------------------ */
-/*  CRT SCREEN EFFECTS (global overlays)                              */
-/* ------------------------------------------------------------------ */
-
-/* Faint scanlines across the whole page */
-.crt-scanlines::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0) 0px,
-    rgba(0, 0, 0, 0) 2px,
-    rgba(0, 0, 0, 0.28) 3px,
-    rgba(0, 0, 0, 0.28) 4px
-  );
-  mix-blend-mode: multiply;
-  opacity: 0.5;
+/* One visible focus treatment, everywhere. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
-/* Vignette + subtle phosphor glow + slow flicker */
-.crt-scanlines::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 61;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0) 62%,
-    rgba(0, 0, 0, 0.32) 100%
-  );
-  animation: crt-flicker 6s infinite steps(1);
+/* ------------------------------------------------------------------ *
+ *  The four parts
+ *
+ *  There is no card, no panel and no shadow in this design. Grouping is
+ *  done with space; separation with a single hairline.
+ * ------------------------------------------------------------------ */
+
+/* 1. meta — dates, labels, tags. The only monospace on the page. */
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-ink-2);
 }
 
-@keyframes crt-flicker {
-  0%, 97%, 100% { opacity: 1; }
-  98% { opacity: 0.86; }
-  99% { opacity: 0.94; }
+/* 2. link — underlined on the offset, thickens on hover. No colour change. */
+.link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-thickness 0.16s ease;
+}
+.link:hover {
+  text-decoration-thickness: 2px;
 }
 
-/* Rolling scan bar */
-.scan-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: 140px;
-  z-index: 59;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(76, 224, 136, 0) 0%,
-    rgba(76, 224, 136, 0.05) 50%,
-    rgba(76, 224, 136, 0) 100%
-  );
-  animation: roll 7s linear infinite;
-}
-@keyframes roll {
-  0% { transform: translateY(-160px); }
-  100% { transform: translateY(100vh); }
-}
-
-/* Grid background used in hero */
-.grid-bg {
-  background-image:
-    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
-  background-size: 42px 42px;
-  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 40%, transparent 100%);
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 40%, transparent 100%);
-}
-
-/* ------------------------------------------------------------------ */
-/*  GLITCH TEXT (adapted from 21st.dev CyberpunkTerminalHero)         */
-/* ------------------------------------------------------------------ */
-.glitch {
-  position: relative;
-  display: inline-block;
-  color: var(--color-green-bright);
-  text-shadow: 0 0 12px rgba(125, 255, 171, 0.35);
-}
-.glitch::before,
-.glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-.glitch::before {
-  color: var(--color-amber);
-  z-index: -1;
-  animation: glitch-a 2.6s infinite linear alternate-reverse;
-}
-.glitch::after {
-  color: var(--color-green);
-  z-index: -2;
-  animation: glitch-b 3.4s infinite linear alternate-reverse;
-}
-@keyframes glitch-a {
-  0%, 92%, 100% { transform: translate(0, 0); clip-path: inset(0 0 0 0); }
-  93% { transform: translate(-2px, -1px); clip-path: inset(20% 0 40% 0); }
-  95% { transform: translate(2px, 1px); clip-path: inset(60% 0 10% 0); }
-  97% { transform: translate(-1px, 1px); clip-path: inset(10% 0 70% 0); }
-}
-@keyframes glitch-b {
-  0%, 90%, 100% { transform: translate(0, 0); clip-path: inset(0 0 0 0); }
-  91% { transform: translate(2px, 1px); clip-path: inset(50% 0 20% 0); }
-  94% { transform: translate(-2px, -1px); clip-path: inset(15% 0 55% 0); }
-  96% { transform: translate(1px, -1px); clip-path: inset(70% 0 5% 0); }
-}
-
-/* Blinking terminal cursor */
-.cursor::after {
-  content: "▮";
-  margin-left: 2px;
-  color: var(--color-green);
-  animation: blink 1.05s steps(1) infinite;
-}
-.blink {
-  animation: blink 1.05s steps(1) infinite;
-}
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
-/* ------------------------------------------------------------------ */
-/*  TERMINAL WINDOW CHROME                                            */
-/* ------------------------------------------------------------------ */
-.term {
-  background: var(--color-panel);
-  border: 1px solid var(--color-line-strong);
-  box-shadow: 0 12px 32px -18px rgba(0, 0, 0, 0.9);
-}
-.term-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 12px;
-  border-bottom: 1px solid var(--color-line);
-  background: linear-gradient(to bottom, rgba(76, 224, 136, 0.05), transparent);
-}
-.term-dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.35);
-}
-
-/* Buttons */
-.btn-term {
+/* 3. button — one filled, one outlined. 44px minimum, always. */
+.btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
   gap: 8px;
-  padding: 12px 18px;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  letter-spacing: 0.03em;
-  color: var(--color-green-bright);
-  border: 1px solid var(--color-line-strong);
-  background: rgba(76, 224, 136, 0.04);
-  transition: background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
-  cursor: pointer;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-size: var(--text-body);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.16s ease, border-color 0.16s ease;
 }
-.btn-term:hover {
-  background: rgba(76, 224, 136, 0.14);
-  border-color: var(--color-green);
-  box-shadow: 0 0 22px -4px rgba(76, 224, 136, 0.5);
-  transform: translateY(-1px);
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
 }
-.btn-term.amber {
-  color: var(--color-amber);
-  border-color: rgba(255, 180, 84, 0.4);
-  background: rgba(255, 180, 84, 0.05);
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--color-accent) 86%, var(--color-ink));
 }
-.btn-term.amber:hover {
-  background: rgba(255, 180, 84, 0.14);
-  border-color: var(--color-amber);
-  box-shadow: 0 0 22px -4px rgba(255, 180, 84, 0.5);
+.btn-secondary {
+  border-color: var(--color-hairline);
+  color: var(--color-ink);
+}
+.btn-secondary:hover {
+  border-color: var(--color-ink-2);
 }
 
-/* Tag chip */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  font-size: 0.72rem;
-  letter-spacing: 0.02em;
-  color: var(--color-fg-soft);
-  border: 1px solid var(--color-line);
-  background: rgba(76, 224, 136, 0.04);
+/* 4. row — the one part this page is built from. Used by work,
+      projects and recognition without modification. */
+.row {
+  display: grid;
+  gap: 4px 32px;
+  padding: 32px 0;
+  border-top: 1px solid var(--color-hairline);
+}
+@media (min-width: 768px) {
+  .row {
+    grid-template-columns: 9rem 1fr;
+  }
 }
 
-/* Text glow helpers */
-.glow {
-  text-shadow: 0 0 10px rgba(76, 224, 136, 0.45);
-}
-.glow-amber {
-  text-shadow: 0 0 10px rgba(255, 180, 84, 0.4);
-}
-
-/* Card hover lift */
-.lift {
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-.lift:hover {
-  transform: translateY(-3px);
-  border-color: var(--color-line-strong);
-  box-shadow: 0 16px 36px -22px rgba(76, 224, 136, 0.35);
-}
-
-/* Anchor offset for fixed nav */
-section[id] {
-  scroll-margin-top: 84px;
-}
-
-/* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
   }
 }

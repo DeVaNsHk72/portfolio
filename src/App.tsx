@@ -1,28 +1,27 @@
-import Nav from "./components/Nav";
+import Header from "./components/Header";
 import Hero from "./components/Hero";
-import About from "./components/About";
-import Experience from "./components/Experience";
+import Work from "./components/Work";
 import Projects from "./components/Projects";
-import Skills from "./components/Skills";
-import Achievements from "./components/Achievements";
+import Recognition from "./components/Recognition";
+import Details from "./components/Details";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
 export default function App() {
   return (
-    <div className="crt-scanlines relative min-h-screen bg-bg text-fg">
-      <div className="scan-bar" aria-hidden />
-      <Nav />
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <Skills />
-        <Achievements />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Header />
+      <div className="mx-auto max-w-4xl px-6">
+        <main>
+          <Hero />
+          <Work />
+          <Projects />
+          <Recognition />
+          <Details />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 }

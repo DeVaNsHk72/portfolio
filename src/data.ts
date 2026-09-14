@@ -26,22 +26,6 @@ export const profile = {
   },
 };
 
-// Short boot-sequence lines shown while the hero "powers on".
-export const bootLines = [
-  "booting devOS v4.8 ...",
-  "loading kernel modules [ ml • web • security ] ... ok",
-  "mounting /home/devansh ... ok",
-  "establishing secure shell ... ok",
-  "> whoami",
-];
-
-export const stats = [
-  { value: "6,000+", label: "users on shipped products" },
-  { value: "8.6", label: "CGPA @ BMSCE" },
-  { value: "37+", label: "open-source contributions" },
-  { value: "2027", label: "graduating" },
-];
-
 export const about = {
   summary:
     "I'm a final-year Computer Science (Cyber Security) undergraduate at B.M.S. College of Engineering, Bengaluru. I've shipped production engineering work at Frappe (ERPNext) — a product used by 6,000+ people — and built hands-on projects across full-stack development, LLM/RAG systems, and security.",
@@ -100,31 +84,9 @@ export type Project = {
   tags: string[];
   href?: string;
   live?: boolean;
-  cmd: string;
 };
 
 export const projects: Project[] = [
-  {
-    name: "RAG System for Frappe App Generation",
-    blurb:
-      "A fully local retrieval-augmented code-generation pipeline that grounds LLM output in retrieved Frappe framework conventions — producing framework-correct app code instead of relying on model memory.",
-    tags: ["LangChain", "Ollama · qwen3-coder", "nomic-embed-text", "RAG"],
-    cmd: "run rag-frappe.py",
-  },
-  {
-    name: "Image Classification with CNNs",
-    blurb:
-      "An image-classification pipeline on CIFAR-10 using a CNN trained from scratch and a fine-tuned ResNet-18 via transfer learning, with OpenCV preprocessing and accuracy / confusion-matrix analysis.",
-    tags: ["Python", "PyTorch", "torchvision", "OpenCV"],
-    cmd: "train cnn --data cifar10",
-  },
-  {
-    name: "Veri-Update",
-    blurb:
-      "A blockchain-backed system for secure software-update delivery — verifying update integrity and authenticity to protect against tampered or malicious updates.",
-    tags: ["Solidity", "Truffle", "Web3", "Tailwind"],
-    cmd: "deploy veri-update.sol",
-  },
   {
     name: "NoteGo.in",
     blurb:
@@ -132,7 +94,18 @@ export const projects: Project[] = [
     tags: ["React", "Node", "MongoDB", "Express"],
     href: "https://notego.in",
     live: true,
-    cmd: "open notego.in",
+  },
+  {
+    name: "RAG System for Frappe App Generation",
+    blurb:
+      "A fully local retrieval-augmented code-generation pipeline that grounds LLM output in retrieved Frappe framework conventions — producing framework-correct app code instead of relying on model memory.",
+    tags: ["LangChain", "Ollama · qwen3-coder", "nomic-embed-text", "RAG"],
+  },
+  {
+    name: "Veri-Update",
+    blurb:
+      "A blockchain-backed system for secure software-update delivery — verifying update integrity and authenticity to protect against tampered or malicious updates.",
+    tags: ["Solidity", "Truffle", "Web3", "Tailwind"],
   },
   {
     name: "Chef-Jugaad",
@@ -141,7 +114,12 @@ export const projects: Project[] = [
     tags: ["React", "AI", "Vercel"],
     href: "https://chef-jugaad.vercel.app/",
     live: true,
-    cmd: "open chef-jugaad",
+  },
+  {
+    name: "Image Classification with CNNs",
+    blurb:
+      "An image-classification pipeline on CIFAR-10 using a CNN trained from scratch and a fine-tuned ResNet-18 via transfer learning, with OpenCV preprocessing and accuracy / confusion-matrix analysis.",
+    tags: ["Python", "PyTorch", "torchvision", "OpenCV"],
   },
   {
     name: "Stock-Predictor",
@@ -149,7 +127,6 @@ export const projects: Project[] = [
       "Forecasts stock prices from historical data using the Prophet model — pick a ticker, set the horizon, and visualise historical vs. forecasted trends.",
     tags: ["Python", "Prophet", "Streamlit"],
     href: "https://github.com/Devanshk9/Stock_Predictor",
-    cmd: "git clone Stock_Predictor",
   },
 ];
 
@@ -196,6 +173,7 @@ export const skills: SkillGroup[] = [
 
 export type Achievement = {
   title: string;
+  period: string;
   meta: string;
   points: string[];
 };
@@ -203,6 +181,7 @@ export type Achievement = {
 export const achievements: Achievement[] = [
   {
     title: "Flipkart GRID 2026 — National Semi-Finalist",
+    period: "2026",
     meta: "Flipkart's flagship national engineering challenge",
     points: [
       "Advanced to the national semi-final round of Flipkart GRID 2026, competing against teams from across India.",
@@ -210,6 +189,7 @@ export const achievements: Achievement[] = [
   },
   {
     title: "Security Tester — e-Governance Platform, BMSCE",
+    period: "2025",
     meta: "Responsible disclosure",
     points: [
       "Identified a critical vulnerability exposing sensitive student data via improper authentication flows.",
@@ -219,6 +199,7 @@ export const achievements: Achievement[] = [
   },
   {
     title: "Google Code-in 2019–20 — Runner-Up",
+    period: "2019–20",
     meta: "Global finalist · 15,000+ participants",
     points: [
       "Completed 37+ open-source contributions to OpenMRS.",
