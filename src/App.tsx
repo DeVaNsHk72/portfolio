@@ -1,5 +1,4 @@
 import { Fragment, useEffect, useState, type ReactNode } from "react";
-import Donut from "./components/Donut";
 import { profile, about, experience, projects, achievements, skills } from "./data";
 
 function L({ href, children }: { href: string; children: ReactNode }) {
@@ -24,132 +23,130 @@ function useBengaluruTime() {
   return t;
 }
 
-// one section = a numbered mono label on the left, content on the right
-function Section({ id, n, title, children }: { id: string; n: string; title: string; children: ReactNode }) {
+const SECTIONS = ["about", "work", "projects", "recognition", "skills", "education"] as const;
+
+// which section is under the top third of the viewport
+function useActive() {
+  const [active, setActive] = useState<string>("");
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-30% 0px -65% 0px" },
+    );
+    SECTIONS.forEach((id) => io.observe(document.getElementById(id)!));
+    return () => io.disconnect();
+  }, []);
+  return active;
+}
+
+function Section({ id, children }: { id: string; children: ReactNode }) {
   return (
     <section id={id} className="sec">
-      <h2>
-        <span className="num">{n}</span>
-        {title}/
-      </h2>
-      <div>{children}</div>
+      <h2>{id}/</h2>
+      {children}
     </section>
   );
 }
 
-const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
-
 export default function App() {
   const time = useBengaluruTime();
+  const active = useActive();
   const s = profile.socials;
-
-  const facts: [string, ReactNode][] = [
-    [
-      "who/",
-      <>
-        bengaluru, india <span className="mono dim">12.97°N 77.59°E</span>
-        <br />
-        it's {time} here
-      </>,
-    ],
-    ["now/", "final-year cs (cyber security) at bmsce. building local rag pipelines and erpnext agents."],
-    [
-      "links/",
-      <>
-        <L href={s.github}>github</L>, <L href={s.linkedin}>linkedin</L>, <L href={s.leetcode}>leetcode</L>,{" "}
-        <L href={s.blog}>blog</L>, <L href={profile.resumeUrl}>cv</L>
-      </>,
-    ],
-  ];
 
   return (
     <div className="wrap">
-      <nav className="top">
-        <L href="#">devansh</L>
-        <span>
-          <L href="#work">work</L>
-          <L href="#projects">projects</L>
-          <L href={`mailto:${profile.email}`}>say hi</L>
-        </span>
-      </nav>
-
-      <header className="hero">
-        <Donut />
-        <div>
-          <h1>
-            i'm <em>devansh</em>
-          </h1>
-          <p className="lede">i build things end to end: llm systems, full-stack apps, and the odd security hole.</p>
-          <dl>
-            {facts.map(([k, v]) => (
-              <Fragment key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
-              </Fragment>
-            ))}
-          </dl>
-        </div>
-      </header>
+      <aside className="side">
+        <a className="mark" href="#">
+          dk
+        </a>
+        <nav>
+          {SECTIONS.map((id, i) => (
+            <a key={id} href={`#${id}`} className={active === id ? "on" : undefined}>
+              <span>{String(i + 1).padStart(2, "0")}</span>
+              {id}
+            </a>
+          ))}
+        </nav>
+        <p className="side-foot">
+          Bengaluru
+          <br />
+          {time}
+        </p>
+      </aside>
 
       <main>
-        <Section id="about" n="01" title="about">
-          <p className="prose">{about.summary}</p>
-          <p className="prose">{about.detail}</p>
-          <p className="prose dim">{about.personal}</p>
+        <header className="hero">
+          <h1>i'm devansh</h1>
+          <p className="lede">I build full-stack apps and tools around LLMs. I also do some security testing.</p>
+          <p className="links">
+            <L href={s.github}>GitHub</L>
+            <L href={s.linkedin}>LinkedIn</L>
+            <L href={s.leetcode}>LeetCode</L>
+            <L href={s.blog}>Blog</L>
+            <L href={profile.resumeUrl}>Résumé</L>
+            <L href={`mailto:${profile.email}`}>Email</L>
+          </p>
+        </header>
+
+        <Section id="about">
+          <p>{about.summary}</p>
+          <p>{about.detail}</p>
+          <p className="dim">{about.personal}</p>
         </Section>
 
-        <Section id="work" n="02" title="work">
+        <Section id="work">
           {experience.map((e) => (
             <article key={e.company} className="item">
-              <header>
+              <div className="row">
                 <h3>
-                  {e.role} <span className="dim">at</span> {e.company}
+                  {e.role}, {e.company}
                 </h3>
                 <span className="meta">{e.period}</span>
-              </header>
-              <p className="sub">{e.meta}</p>
-              <ul className="points">
+              </div>
+              <ul>
                 {e.points.map((p) => (
                   <li key={p}>{p}</li>
                 ))}
               </ul>
-              <p className="tags">{e.tags.join(" · ")}</p>
+              {e.tags.length > 0 && <p className="meta">{e.tags.join(" / ")}</p>}
             </article>
           ))}
         </Section>
 
-        <Section id="projects" n="03" title="projects">
+        <Section id="projects">
           {projects.map((p) => (
             <article key={p.name} className="item">
-              <header>
+              <div className="row">
                 <h3>{p.href ? <L href={p.href}>{p.name}</L> : p.name}</h3>
-                {p.href && <span className="meta">{p.live ? "● live" : host(p.href)}</span>}
-              </header>
+                {p.live && <span className="meta">live</span>}
+              </div>
               <p>{p.blurb}</p>
-              <p className="tags">{p.tags.join(" · ")}</p>
+              <p className="meta">{p.tags.join(" / ")}</p>
             </article>
           ))}
         </Section>
 
-        <Section id="recognition" n="04" title="recognition">
+        <Section id="recognition">
           {achievements.map((a) => (
             <article key={a.title} className="item">
-              <header>
+              <div className="row">
                 <h3>{a.title}</h3>
                 <span className="meta">{a.period}</span>
-              </header>
-              <p className="sub">{a.meta}</p>
-              <ul className="points">
-                {a.points.map((p) => (
-                  <li key={p}>{p}</li>
-                ))}
-              </ul>
+              </div>
+              <p className="dim">{a.meta}</p>
+              {a.points.length > 0 && (
+                <ul>
+                  {a.points.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+              )}
             </article>
           ))}
         </Section>
 
-        <Section id="skills" n="05" title="toolkit">
-          <dl className="skills">
+        <Section id="skills">
+          <dl>
             {skills.map((g) => (
               <Fragment key={g.label}>
                 <dt>{g.label}</dt>
@@ -159,31 +156,26 @@ export default function App() {
           </dl>
         </Section>
 
-        <Section id="education" n="06" title="education">
+        <Section id="education">
           <article className="item">
-            <header>
+            <div className="row">
               <h3>{about.education.school}</h3>
               <span className="meta">{about.education.period}</span>
-            </header>
+            </div>
             <p>{about.education.degree}</p>
-            <p className="sub">
-              cgpa {about.education.cgpa} · {about.education.cert}
+            <p className="dim">
+              CGPA {about.education.cgpa}. {about.education.cert}.
             </p>
           </article>
         </Section>
 
-        <Section id="contact" n="07" title="contact">
-          <p className="big">
-            easiest way to reach me is email.{" "}
-            <L href={`mailto:${profile.email}`}>{profile.email}</L>
+        <footer>
+          <p>
+            Say hi at <L href={`mailto:${profile.email}`}>{profile.email}</L>
           </p>
-        </Section>
+          <span className="meta">© {new Date().getFullYear()} Devansh Khetan</span>
+        </footer>
       </main>
-
-      <footer>
-        <span>© {new Date().getFullYear()} devansh khetan</span>
-        <span>set in newsreader &amp; jetbrains mono</span>
-      </footer>
     </div>
   );
 }

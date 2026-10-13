@@ -1,25 +1,11 @@
-// ---------------------------------------------------------------------------
-//  Central content — sourced from Devansh Khetan's resume + GitHub profile.
-//  Edit here to update the whole site.
-// ---------------------------------------------------------------------------
+// All site copy lives here. Sourced from Devansh's resume and GitHub profile.
 
 export const profile = {
   name: "Devansh Khetan",
-  handle: "devanshk",
-  roles: [
-    "AI / Deep-Learning Enthusiast",
-    "Full-Stack Engineer",
-    "Security & Systems Tinkerer",
-  ],
-  tagline:
-    "Final-year CS (Cyber Security) undergrad who ships production features end to end — from LLM/RAG systems to full-stack apps used by 6,000+ people.",
-  location: "Bengaluru, India",
   email: "devanshkhetan9@gmail.com",
-  phone: "+91 8766099999",
   resumeUrl: import.meta.env.BASE_URL + "Devansh_Khetan_Resume.pdf",
   socials: {
     github: "https://github.com/DeVaNsHk72",
-    github2: "https://github.com/Devanshk9",
     linkedin: "https://linkedin.com/in/devansh-khetan-027681176",
     blog: "https://dkay.bearblog.dev",
     leetcode: "https://leetcode.com/u/not_dal_baati",
@@ -28,17 +14,17 @@ export const profile = {
 
 export const about = {
   summary:
-    "I'm a final-year Computer Science (Cyber Security) undergraduate at B.M.S. College of Engineering, Bengaluru. I've shipped production engineering work at Frappe (ERPNext) — a product used by 6,000+ people — and built hands-on projects across full-stack development, LLM/RAG systems, and security.",
+    "I'm a final-year Computer Science student at B.M.S. College of Engineering in Bengaluru, specialising in cyber security. I interned at Frappe, where I worked on Frappe Drive and Frappe Writer, and I run NoteGo, a study site used by over 6,000 BMSCE students.",
   detail:
-    "I like owning features end to end in fast, PR-driven codebases: reading a large open-source repo, finding the seam, and shipping the change. Lately I've been deep in local RAG pipelines, PyTorch, and blockchain-backed systems.",
+    "Most of what I build is full-stack web apps and tools around LLMs. Right now that means local RAG pipelines and PyTorch models.",
   personal:
-    "Off the keyboard you'll find me on a piano or guitar, grinding LeetCode as not_dal_baati, or writing build notes over at dkay.bearblog.dev.",
+    "Outside of code I play piano and guitar, solve LeetCode as not_dal_baati, and write at dkay.bearblog.dev.",
   education: {
     school: "B.M.S. College of Engineering, Bengaluru",
-    degree: "B.E. — Computer Science & Engineering (IoT & Cyber Security incl. Blockchain)",
+    degree: "B.E. in Computer Science (IoT, Cyber Security and Blockchain)",
     period: "2023 – 2027",
     cgpa: "8.6 / 10",
-    cert: "Supervised Machine Learning — DeepLearning.AI (2026)",
+    cert: "Supervised Machine Learning, DeepLearning.AI (2026)",
   },
 };
 
@@ -54,27 +40,27 @@ export type Experience = {
 export const experience: Experience[] = [
   {
     role: "Software & Product Intern",
-    company: "Frappe Technologies (ERPNext)",
+    company: "Frappe Technologies",
     meta: "Remote",
-    period: "Oct 2025 – Dec 2025",
+    period: "Oct – Dec 2025",
     points: [
-      "Shipped core editor and UI features across Frappe Drive and Frappe Writer, including customizable tables built with ProseMirror to improve editor flexibility.",
-      "Built and refined Vue 3 + Vite + Tailwind components using frappe-ui.",
-      "Worked with Git submodules, CI pipelines, PR reviews, and debugging inside a production open-source codebase.",
+      "Built editor and UI features for Frappe Drive and Frappe Writer, including custom tables in ProseMirror.",
+      "Wrote Vue 3 components with frappe-ui and Tailwind.",
+      "Shipped through PR reviews and CI in a large open-source codebase that uses Git submodules.",
     ],
-    tags: ["Vue 3", "Vite", "Tailwind", "ProseMirror", "CI/CD"],
+    tags: ["Vue 3", "Vite", "Tailwind", "ProseMirror"],
   },
   {
-    role: "Sponsorship Point of Contact",
-    company: "UTSAV — BMSCE",
-    meta: "One of Bengaluru's largest college festivals",
+    role: "Sponsorship lead",
+    company: "UTSAV, BMSCE",
+    meta: "BMSCE's annual college fest",
     period: "Oct 2024 – Apr 2026",
     points: [
-      "Owned brand partnerships end to end for a festival with footfall in the tens of thousands.",
-      "Onboarded Paytm, Realme, and Unibic through 50+ cold outreaches.",
-      "Executed on-ground activations with brand teams.",
+      "Handled brand partnerships for the fest.",
+      "Signed Paytm, Realme and Unibic after 50+ cold pitches.",
+      "Ran on-ground activations with the brand teams.",
     ],
-    tags: ["Partnerships", "Outreach", "Ops"],
+    tags: [],
   },
 ];
 
@@ -88,43 +74,40 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    name: "NoteGo.in",
+    name: "NoteGo",
     blurb:
-      "Founder. A MERN study-materials platform I took from idea to campus-wide adoption — now used by 6,000+ students at BMSCE for notes, past papers, and curated tutorials.",
-    tags: ["React", "Node", "MongoDB", "Express"],
+      "A study site for BMSCE with notes, past papers and tutorials. I started it and still run it. Over 6,000 students use it.",
+    tags: ["React", "Node", "Express", "MongoDB"],
     href: "https://notego.in",
     live: true,
   },
   {
-    name: "RAG System for Frappe App Generation",
+    name: "Frappe app generator",
     blurb:
-      "A fully local retrieval-augmented code-generation pipeline that grounds LLM output in retrieved Frappe framework conventions — producing framework-correct app code instead of relying on model memory.",
-    tags: ["LangChain", "Ollama · qwen3-coder", "nomic-embed-text", "RAG"],
+      "Generates Frappe app code with a local LLM. It looks up Frappe conventions before writing, so the code follows the framework instead of guessing.",
+    tags: ["LangChain", "Ollama", "qwen3-coder", "nomic-embed-text"],
   },
   {
     name: "Veri-Update",
-    blurb:
-      "A blockchain-backed system for secure software-update delivery — verifying update integrity and authenticity to protect against tampered or malicious updates.",
-    tags: ["Solidity", "Truffle", "Web3", "Tailwind"],
+    blurb: "Records software updates on a blockchain so a client can check that an update hasn't been tampered with.",
+    tags: ["Solidity", "Truffle", "Web3"],
   },
   {
     name: "Chef-Jugaad",
-    blurb:
-      "An AI-powered recipe platform that instantly generates creative, easy-to-make dishes from the ingredients you already have on hand.",
-    tags: ["React", "AI", "Vercel"],
+    blurb: "Tell it what's in your kitchen and it suggests recipes you can make with it.",
+    tags: ["React", "LLM API"],
     href: "https://chef-jugaad.vercel.app/",
     live: true,
   },
   {
-    name: "Image Classification with CNNs",
+    name: "CIFAR-10 classifier",
     blurb:
-      "An image-classification pipeline on CIFAR-10 using a CNN trained from scratch and a fine-tuned ResNet-18 via transfer learning, with OpenCV preprocessing and accuracy / confusion-matrix analysis.",
-    tags: ["Python", "PyTorch", "torchvision", "OpenCV"],
+      "A CNN trained from scratch compared against a fine-tuned ResNet-18, with OpenCV preprocessing and a confusion-matrix breakdown.",
+    tags: ["PyTorch", "torchvision", "OpenCV"],
   },
   {
     name: "Stock-Predictor",
-    blurb:
-      "Forecasts stock prices from historical data using the Prophet model — pick a ticker, set the horizon, and visualise historical vs. forecasted trends.",
+    blurb: "Pick a ticker and a time range and it plots past prices next to a Prophet forecast.",
     tags: ["Python", "Prophet", "Streamlit"],
     href: "https://github.com/Devanshk9/Stock_Predictor",
   },
@@ -133,42 +116,10 @@ export const projects: Project[] = [
 export type SkillGroup = { label: string; items: string[] };
 
 export const skills: SkillGroup[] = [
-  {
-    label: "languages",
-    items: ["Python", "C++", "JavaScript", "Solidity", "SQL"],
-  },
-  {
-    label: "frameworks & tools",
-    items: [
-      "React.js",
-      "Node.js",
-      "MongoDB",
-      "FastAPI",
-      "PostgreSQL",
-      "REST APIs",
-      "Git / GitHub",
-    ],
-  },
-  {
-    label: "ml / ai",
-    items: ["PyTorch", "Pandas", "LangChain", "Ollama", "torchvision"],
-  },
-  {
-    label: "security & systems",
-    items: ["Wireshark", "Selenium", "Linux / Unix Shell", "Cryptography"],
-  },
-  {
-    label: "coursework",
-    items: [
-      "Cyber Security",
-      "Ethical Hacking",
-      "Cloud Computing & Security",
-      "Machine Learning",
-      "DSA",
-      "OS",
-      "Networks",
-    ],
-  },
+  { label: "Languages", items: ["Python", "C++", "JavaScript", "Solidity", "SQL"] },
+  { label: "Web", items: ["React", "Node.js", "FastAPI", "MongoDB", "PostgreSQL"] },
+  { label: "ML", items: ["PyTorch", "Pandas", "LangChain", "Ollama"] },
+  { label: "Security", items: ["Wireshark", "Selenium", "Linux", "Cryptography"] },
 ];
 
 export type Achievement = {
@@ -180,30 +131,24 @@ export type Achievement = {
 
 export const achievements: Achievement[] = [
   {
-    title: "Flipkart GRID 2026 — National Semi-Finalist",
+    title: "Flipkart GRID 2026, national semi-finalist",
     period: "2026",
-    meta: "Flipkart's flagship national engineering challenge",
-    points: [
-      "Advanced to the national semi-final round of Flipkart GRID 2026, competing against teams from across India.",
-    ],
+    meta: "Flipkart's national engineering challenge",
+    points: [],
   },
   {
-    title: "Security Tester — e-Governance Platform, BMSCE",
+    title: "Found a data leak in BMSCE's e-governance portal",
     period: "2025",
     meta: "Responsible disclosure",
     points: [
-      "Identified a critical vulnerability exposing sensitive student data via improper authentication flows.",
-      "Performed manual testing and exploit analysis (input validation, access-control flaws).",
-      "Proposed and helped implement a token-based authentication system, significantly improving data security.",
+      "An authentication flaw exposed student records. I found it by testing access control and input validation by hand.",
+      "Reported it and helped move the portal to token-based auth.",
     ],
   },
   {
-    title: "Google Code-in 2019–20 — Runner-Up",
-    period: "2019–20",
-    meta: "Global finalist · 15,000+ participants",
-    points: [
-      "Completed 37+ open-source contributions to OpenMRS.",
-      "Spanned Android development, frontend improvements, and bug fixes.",
-    ],
+    title: "Google Code-in 2019–20, runner-up",
+    period: "2019",
+    meta: "15,000+ participants worldwide",
+    points: ["Made 37 contributions to OpenMRS across Android, frontend and bug fixes."],
   },
 ];
