@@ -82,8 +82,12 @@ export default function Donut() {
 
   return (
     <figure className="donut">
-      <pre ref={pre} aria-hidden="true" />
-      <figcaption>donut.c — move your cursor over it</figcaption>
+      <div className="plate">
+        <span className="corner tl">fig. 1</span>
+        <span className="corner tr">a1k0n, 2006</span>
+        <pre ref={pre} aria-hidden="true" />
+      </div>
+      <figcaption>donut.c, spinning live. hover to steer it.</figcaption>
     </figure>
   );
 }

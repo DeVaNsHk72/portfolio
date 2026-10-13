@@ -24,8 +24,8 @@ function More({ items }: { items: { label: string; note: string; href?: string }
         <ul className="list">
           {items.map((p) => (
             <li key={p.label}>
-              {p.href ? <L href={p.href}>{p.label}</L> : p.label}
-              <span className="dim"> — {p.note}</span>
+              <span className="name">{p.href ? <L href={p.href}>{p.label}</L> : p.label}</span>
+              <span className="note">{p.note}</span>
             </li>
           ))}
         </ul>
@@ -55,7 +55,9 @@ export default function App() {
     [
       "who/",
       <>
-        <span className="mono">12.9716°N 77.5946°E</span>, bengaluru — {time} here
+        bengaluru, india <span className="mono dim">12.97°N 77.59°E</span>
+        <br />
+        it's {time} here
       </>,
     ],
     ["about/", "final-year cs (cyber security) at bmsce. i like reading big codebases, finding the seam, and shipping the change. piano, guitar."],
@@ -89,7 +91,7 @@ export default function App() {
   ];
 
   return (
-    <>
+    <div className="wrap">
       <nav className="top">
         <L href={s.blog}>blog</L>
         <span>
@@ -100,7 +102,10 @@ export default function App() {
       <main className="page">
         <Donut />
         <section>
-          <h1>i'm devansh</h1>
+          <h1>
+            i'm <em>devansh</em>
+          </h1>
+          <p className="lede">i build things end to end: llm systems, full-stack apps, and the odd security hole.</p>
           <dl>
             {rows.map(([k, v]) => (
               <Fragment key={k}>
@@ -111,6 +116,10 @@ export default function App() {
           </dl>
         </section>
       </main>
-    </>
+      <footer>
+        <span>© {new Date().getFullYear()} devansh khetan</span>
+        <span>set in newsreader &amp; jetbrains mono</span>
+      </footer>
+    </div>
   );
 }
