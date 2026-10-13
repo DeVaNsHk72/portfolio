@@ -3,7 +3,7 @@
 Personal site. A single page: intro, then about, work, projects,
 recognition, skills and education, with a sticky contents list on the left.
 
-**Live:** https://devanshk72.github.io
+**Live:** https://devanshk72.github.io/portfolio/
 
 ## Stack
 
@@ -21,8 +21,8 @@ npm run dev
 ## Deploy
 
 Every push to `main` builds and publishes `dist/` to GitHub Pages
-([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)). The repo is
-the user site (`devanshk72.github.io`), so Vite `base` is `/`.
+([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)). It is a project
+page, so Vite `base` is `/portfolio/` and must match the repo name.
 
 ## Editing content
 
