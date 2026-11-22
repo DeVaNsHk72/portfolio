@@ -1,10 +1,10 @@
 import { Fragment, useEffect, useState, type ReactNode } from "react";
-import { profile, about, experience, projects, achievements, skills } from "./data";
+import { profile, now, about, experience, projects, older, openSource, achievements, skills } from "./data";
 
-function L({ href, children }: { href: string; children: ReactNode }) {
+function L({ href, children, className = "l" }: { href: string; children: ReactNode; className?: string }) {
   const ext = href.startsWith("http");
   return (
-    <a className="l" href={href} {...(ext && { target: "_blank", rel: "noreferrer" })}>
+    <a className={className} href={href} {...(ext && { target: "_blank", rel: "noreferrer" })}>
       {children}
     </a>
   );
@@ -23,7 +23,7 @@ function useBengaluruTime() {
   return t;
 }
 
-const SECTIONS = ["about", "work", "projects", "recognition", "skills", "education"] as const;
+const SECTIONS = ["now", "about", "work", "projects", "open-source", "recognition", "skills", "education"] as const;
 
 // which section is under the top third of the viewport
 function useActive() {
@@ -39,6 +39,25 @@ function useActive() {
   return active;
 }
 
+// reading progress through the page, 0..1
+function useProgress() {
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    const on = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      setP(max > 0 ? Math.min(1, scrollY / max) : 0);
+    };
+    on();
+    addEventListener("scroll", on, { passive: true });
+    addEventListener("resize", on);
+    return () => {
+      removeEventListener("scroll", on);
+      removeEventListener("resize", on);
+    };
+  }, []);
+  return p;
+}
+
 function Section({ id, children }: { id: string; children: ReactNode }) {
   return (
     <section id={id} className="sec">
@@ -51,13 +70,14 @@ function Section({ id, children }: { id: string; children: ReactNode }) {
 export default function App() {
   const time = useBengaluruTime();
   const active = useActive();
+  const progress = useProgress();
   const s = profile.socials;
 
   return (
     <div className="wrap">
       <aside className="side">
         <a className="mark" href="#">
-          dk
+          dk<span>.</span>
         </a>
         <nav>
           {SECTIONS.map((id, i) => (
@@ -67,6 +87,9 @@ export default function App() {
             </a>
           ))}
         </nav>
+        <div className="track" aria-hidden>
+          <i style={{ transform: `scaleX(${progress})` }} />
+        </div>
         <p className="side-foot">
           Bengaluru
           <br />
@@ -76,8 +99,13 @@ export default function App() {
 
       <main>
         <header className="hero">
-          <h1>i'm devansh</h1>
-          <p className="lede">I build full-stack apps and tools around LLMs. I also do some security testing.</p>
+          <p className="kicker">
+            <span className="dot" aria-hidden /> final-year CS at BMSCE, Bengaluru
+          </p>
+          <h1>
+            i'm <em>devansh</em>
+          </h1>
+          <p className="lede">I build backends, data systems and LLM agents that answer from real data.</p>
           <p className="links">
             <L href={s.github}>GitHub</L>
             <L href={s.linkedin}>LinkedIn</L>
@@ -87,6 +115,15 @@ export default function App() {
             <L href={`mailto:${profile.email}`}>Email</L>
           </p>
         </header>
+
+        <Section id="now">
+          <ul className="now">
+            {now.items.map((n) => (
+              <li key={n}>{n}</li>
+            ))}
+          </ul>
+          <p className="meta">updated {now.updated}</p>
+        </Section>
 
         <Section id="about">
           <p>{about.summary}</p>
@@ -114,16 +151,55 @@ export default function App() {
         </Section>
 
         <Section id="projects">
-          {projects.map((p) => (
-            <article key={p.name} className="item">
-              <div className="row">
-                <h3>{p.href ? <L href={p.href}>{p.name}</L> : p.name}</h3>
-                {p.live && <span className="meta">live</span>}
-              </div>
-              <p>{p.blurb}</p>
-              <p className="meta">{p.tags.join(" / ")}</p>
-            </article>
-          ))}
+          <ol className="projects">
+            {projects.map((p, i) => (
+              <li key={p.name} className="proj">
+                <span className="num" aria-hidden>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="proj-body">
+                  <div className="row">
+                    <h3>{p.href ? <L href={p.href}>{p.name}</L> : p.name}</h3>
+                    {p.status && <span className={`tag ${p.status}`}>{p.status}</span>}
+                  </div>
+                  <p>{p.blurb}</p>
+                  <p className="meta">{p.tags.join(" / ")}</p>
+                </div>
+                {p.stat && (
+                  <figure className="stat">
+                    <strong>{p.stat.value}</strong>
+                    <figcaption>{p.stat.label}</figcaption>
+                  </figure>
+                )}
+              </li>
+            ))}
+          </ol>
+
+          <h4 className="sub">earlier</h4>
+          <dl className="older">
+            {older.map((p) => (
+              <Fragment key={p.name}>
+                <dt>{p.href ? <L href={p.href}>{p.name}</L> : p.name}</dt>
+                <dd>
+                  {p.blurb} <span className="meta">{p.tags.join(" / ")}</span>
+                </dd>
+              </Fragment>
+            ))}
+          </dl>
+        </Section>
+
+        <Section id="open-source">
+          <ul className="oss">
+            {openSource.map((c) => (
+              <li key={c.href}>
+                <L href={c.href} className="oss-link">
+                  <span className="repo">{c.repo}</span>
+                  <span className="what">{c.what}</span>
+                  <span className={`tag ${c.state.replace(" ", "-")}`}>{c.state}</span>
+                </L>
+              </li>
+            ))}
+          </ul>
         </Section>
 
         <Section id="recognition">
@@ -131,7 +207,7 @@ export default function App() {
             <article key={a.title} className="item">
               <div className="row">
                 <h3>{a.title}</h3>
-                <span className="meta">{a.period}</span>
+                {a.period && <span className="meta">{a.period}</span>}
               </div>
               <p className="dim">{a.meta}</p>
               {a.points.length > 0 && (
@@ -170,10 +246,12 @@ export default function App() {
         </Section>
 
         <footer>
-          <p>
+          <p className="sign">
             Say hi at <L href={`mailto:${profile.email}`}>{profile.email}</L>
           </p>
-          <span className="meta">© {new Date().getFullYear()} Devansh Khetan</span>
+          <span className="meta">
+            © {new Date().getFullYear()} Devansh Khetan. Set in Newsreader and JetBrains Mono.
+          </span>
         </footer>
       </main>
     </div>
