@@ -124,6 +124,11 @@ export const sections: Section[] = [
     ],
   },
   {
+    // filled from the blog's rss feed at build time (scripts/fetch-posts.mjs → src/posts.json)
+    title: "writing",
+    items: [],
+  },
+  {
     title: "outside code",
     items: [
       {

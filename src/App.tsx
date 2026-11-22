@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile, intro, sections, outro, links, spotify } from "./data";
 import { icons } from "./Icons";
+import posts from "./posts.json";
 
 function A({ href, children }: { href: string; children: ReactNode }) {
   const ext = href.startsWith("http");
@@ -32,7 +33,12 @@ function rich(text: string) {
 function useBengaluruTime() {
   const fmt = () =>
     new Date()
-      .toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true })
+      .toLocaleTimeString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
       .toLowerCase();
   const [t, setT] = useState(fmt);
   useEffect(() => {
@@ -67,7 +73,12 @@ function Signature() {
     <div ref={ref} className={on ? "sig on" : "sig"}>
       <h1 className="sig-name" aria-label={profile.name}>
         {profile.signature}
-        <svg className="swipe" viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden>
+        <svg
+          className="swipe"
+          viewBox="0 0 300 20"
+          preserveAspectRatio="none"
+          aria-hidden
+        >
           <path pathLength={1} d="M4 14 C 80 6, 180 4, 296 9" />
         </svg>
       </h1>
@@ -94,36 +105,55 @@ export default function App() {
         {intro.map((p) => (
           <p key={p}>{rich(p)}</p>
         ))}
-        {sections.map((s) => (
-          <section key={s.title}>
-            <h2>{s.title}</h2>
-            {s.items.map((it) => (
-              <div key={it.text} className="item">
-                {it.name && (
-                  <div className="head">
-                    <h3>
-                      {it.href ? <A href={it.href}>{it.name}</A> : it.name}
-                      {it.role && <span className="role">{it.role}</span>}
-                    </h3>
-                    {it.meta && <span className="dim">{it.meta}</span>}
-                  </div>
-                )}
-                <p>{rich(it.text)}</p>
-                {it.stack && <p className="dim stack">{it.stack}</p>}
-              </div>
-            ))}
-            {s.title === "outside code" && spotify.embed && (
-              <iframe
-                className="spotify"
-                title="what i'm listening to on spotify"
-                src={spotify.embed}
-                height="80"
-                loading="lazy"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              />
-            )}
-          </section>
-        ))}
+        {sections
+          .filter((s) => s.title !== "writing" || posts.length > 0)
+          .map((s) => (
+            <section key={s.title}>
+              <h2>{s.title}</h2>
+              {s.items.map((it) => (
+                <div key={it.text} className="item">
+                  {it.name && (
+                    <div className="head">
+                      <h3>
+                        {it.href ? <A href={it.href}>{it.name}</A> : it.name}
+                        {it.role && <span className="role">{it.role}</span>}
+                      </h3>
+                      {it.meta && <span className="dim">{it.meta}</span>}
+                    </div>
+                  )}
+                  <p>{rich(it.text)}</p>
+                  {it.stack && <p className="dim stack">{it.stack}</p>}
+                </div>
+              ))}
+              {s.title === "writing" && (
+                <ul className="posts">
+                  {posts.map((post) => (
+                    <li key={post.url}>
+                      <A href={post.url}>{post.title}</A>
+                      <span className="dim">
+                        {new Date(post.date)
+                          .toLocaleDateString("en-IN", {
+                            month: "short",
+                            year: "numeric",
+                          })
+                          .toLowerCase()}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {s.title === "outside code" && spotify.embed && (
+                <iframe
+                  className="spotify"
+                  title="what i'm listening to on spotify"
+                  src={spotify.embed}
+                  height="80"
+                  loading="lazy"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                />
+              )}
+            </section>
+          ))}
         {outro.map((p) => (
           <p key={p}>{rich(p)}</p>
         ))}
