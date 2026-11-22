@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile, intro, sections, outro, links, spotify } from "./data";
 import { icons } from "./Icons";
-import posts from "./posts.json";
+import { posts, fmtDate } from "./posts";
 
 function A({ href, children }: { href: string; children: ReactNode }) {
   const ext = href.startsWith("http");
@@ -86,84 +86,153 @@ function Signature() {
   );
 }
 
+const BASE = import.meta.env.BASE_URL;
+const blogUrl = (slug?: string) => BASE + "blog/" + (slug ? slug + "/" : "");
+
+function Love() {
+  return (
+    <p className="love">
+      with love, {profile.signature}
+      <svg className="heart-sm" viewBox="0 0 32 30" aria-hidden>
+        <path d={HEART} />
+      </svg>
+    </p>
+  );
+}
+
+function Nav() {
+  return (
+    <nav>
+      {links.map((l) => (
+        <A key={l.label} href={l.href}>
+          {icons[l.label]}
+          {l.label}
+        </A>
+      ))}
+    </nav>
+  );
+}
+
+function PostList() {
+  return (
+    <ul className="posts">
+      {posts.map((post) => (
+        <li key={post.slug}>
+          <A href={blogUrl(post.slug)}>{post.title}</A>
+          <span className="dim">{fmtDate(post.date)}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Home() {
+  return (
+    <>
+      <header>
+        <Signature />
+        <Nav />
+      </header>
+      {intro.map((p) => (
+        <p key={p}>{rich(p)}</p>
+      ))}
+      {sections
+        .filter((s) => s.title !== "writing" || posts.length > 0)
+        .map((s) => (
+          <section key={s.title}>
+            <h2>{s.title}</h2>
+            {s.items.map((it) => (
+              <div key={it.text} className="item">
+                {it.name && (
+                  <div className="head">
+                    <h3>
+                      {it.href ? <A href={it.href}>{it.name}</A> : it.name}
+                      {it.role && <span className="role">{it.role}</span>}
+                    </h3>
+                    {it.meta && <span className="dim">{it.meta}</span>}
+                  </div>
+                )}
+                <p>{rich(it.text)}</p>
+                {it.stack && <p className="dim stack">{it.stack}</p>}
+              </div>
+            ))}
+            {s.title === "writing" && <PostList />}
+            {s.title === "outside code" && spotify.embed && (
+              <iframe
+                className="spotify"
+                title="what i'm listening to on spotify"
+                src={spotify.embed}
+                height="80"
+                loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              />
+            )}
+          </section>
+        ))}
+      {outro.map((p) => (
+        <p key={p}>{rich(p)}</p>
+      ))}
+      <Love />
+    </>
+  );
+}
+
+function BlogIndex() {
+  useEffect(() => {
+    document.title = "writing · Devansh Khetan";
+  }, []);
+  return (
+    <>
+      <a className="back" href={BASE}>
+        ← devansh
+      </a>
+      <h1 className="page-title">writing</h1>
+      <p className="dim">things i think about, written down.</p>
+      <PostList />
+    </>
+  );
+}
+
+function PostPage({ slug }: { slug: string }) {
+  const post = posts.find((p) => p.slug === slug);
+  useEffect(() => {
+    document.title = post ? `${post.title} · Devansh Khetan` : "not found · Devansh Khetan";
+  }, [post]);
+  if (!post)
+    return (
+      <>
+        <a className="back" href={blogUrl()}>
+          ← all writing
+        </a>
+        <p>that post doesn't exist.</p>
+      </>
+    );
+  return (
+    <article>
+      <a className="back" href={blogUrl()}>
+        ← all writing
+      </a>
+      <h1 className="page-title">{post.title}</h1>
+      <p className="dim">{fmtDate(post.date, true)}</p>
+      <div className="post" dangerouslySetInnerHTML={{ __html: post.html }} />
+      <Love />
+    </article>
+  );
+}
+
+// tiny router: the page comes from the path after the site's base
+function route() {
+  const path = location.pathname.slice(BASE.length).replace(/\/+$/, "");
+  const m = path.match(/^blog(?:\/([^/]+))?$/);
+  if (!m) return <Home />;
+  return m[1] ? <PostPage slug={m[1]} /> : <BlogIndex />;
+}
+
 export default function App() {
   const time = useBengaluruTime();
   return (
     <>
-      <main>
-        <header>
-          <Signature />
-          <nav>
-            {links.map((l) => (
-              <A key={l.label} href={l.href}>
-                {icons[l.label]}
-                {l.label}
-              </A>
-            ))}
-          </nav>
-        </header>
-        {intro.map((p) => (
-          <p key={p}>{rich(p)}</p>
-        ))}
-        {sections
-          .filter((s) => s.title !== "writing" || posts.length > 0)
-          .map((s) => (
-            <section key={s.title}>
-              <h2>{s.title}</h2>
-              {s.items.map((it) => (
-                <div key={it.text} className="item">
-                  {it.name && (
-                    <div className="head">
-                      <h3>
-                        {it.href ? <A href={it.href}>{it.name}</A> : it.name}
-                        {it.role && <span className="role">{it.role}</span>}
-                      </h3>
-                      {it.meta && <span className="dim">{it.meta}</span>}
-                    </div>
-                  )}
-                  <p>{rich(it.text)}</p>
-                  {it.stack && <p className="dim stack">{it.stack}</p>}
-                </div>
-              ))}
-              {s.title === "writing" && (
-                <ul className="posts">
-                  {posts.map((post) => (
-                    <li key={post.url}>
-                      <A href={post.url}>{post.title}</A>
-                      <span className="dim">
-                        {new Date(post.date)
-                          .toLocaleDateString("en-IN", {
-                            month: "short",
-                            year: "numeric",
-                          })
-                          .toLowerCase()}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {s.title === "outside code" && spotify.embed && (
-                <iframe
-                  className="spotify"
-                  title="what i'm listening to on spotify"
-                  src={spotify.embed}
-                  height="80"
-                  loading="lazy"
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                />
-              )}
-            </section>
-          ))}
-        {outro.map((p) => (
-          <p key={p}>{rich(p)}</p>
-        ))}
-        <p className="love">
-          with love, {profile.signature}
-          <svg className="heart-sm" viewBox="0 0 32 30" aria-hidden>
-            <path d={HEART} />
-          </svg>
-        </p>
-      </main>
+      <main>{route()}</main>
       <footer>
         <span>{profile.name}</span>
         <span>bengaluru, {time}</span>

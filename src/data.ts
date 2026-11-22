@@ -124,7 +124,7 @@ export const sections: Section[] = [
     ],
   },
   {
-    // filled from the blog's rss feed at build time (scripts/fetch-posts.mjs → src/posts.json)
+    // lists the posts in src/posts/*.md
     title: "writing",
     items: [],
   },
@@ -132,7 +132,7 @@ export const sections: Section[] = [
     title: "outside code",
     items: [
       {
-        text: "i play piano and guitar, solve leetcode as not_dal_baati, and sometimes write on my [blog](https://dkay.bearblog.dev). this is the song on repeat right now:",
+        text: "i play piano and guitar, solve leetcode as not_dal_baati, and sometimes [write](" + BASE + "blog/). this is the song on repeat right now:",
       },
     ],
   },
@@ -157,6 +157,6 @@ export const links: { label: string; href: string }[] = [
   { label: "github", href: "https://github.com/DeVaNsHk72" },
   { label: "linkedin", href: "https://www.linkedin.com/in/devanshk72" },
   { label: "leetcode", href: "https://leetcode.com/u/not_dal_baati" },
-  { label: "blog", href: "https://dkay.bearblog.dev" },
+  { label: "blog", href: BASE + "blog/" },
   { label: "spotify", href: "https://open.spotify.com/user/z8etmld9xst8rq3imqdltp5yp" },
 ];
