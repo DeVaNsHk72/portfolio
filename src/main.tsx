@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@fontsource/newsreader/400.css";
-import "@fontsource/newsreader/400-italic.css";
-import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/outfit/400.css";
+import "@fontsource/outfit/500.css";
+import "@fontsource/permanent-marker/400.css";
 import "./index.css";
 import App from "./App.tsx";
 
