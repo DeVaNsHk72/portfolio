@@ -153,5 +153,5 @@ export const links: { label: string; href: string }[] = [
   { label: "linkedin", href: "https://www.linkedin.com/in/devanshk72" },
   { label: "leetcode", href: "https://leetcode.com/u/not_dal_baati" },
   { label: "blog", href: "https://dkay.bearblog.dev" },
-  ...(SPOTIFY_URL ? [{ label: "spotify", href: SPOTIFY_URL }] : []),
+  { label: "spotify", href: "https://open.spotify.com/user/z8etmld9xst8rq3imqdltp5yp" },
 ];

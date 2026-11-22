@@ -5,8 +5,9 @@ import path from "node:path";
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Served from https://devanshk72.github.io/portfolio/ on GitHub Pages.
-  base: "/portfolio/",
+  // GitHub Pages serves it under /portfolio/; Vercel (dk09.vercel.app) serves it at the root.
+  // Vercel sets VERCEL=1 during its build.
+  base: process.env.VERCEL ? "/" : "/portfolio/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
